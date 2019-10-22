@@ -7,7 +7,7 @@
         public int Quanity { get; set; }
         public int Price { get; set; }
         public int Total { get; set; }
-        public virtual Product Product { get; set; }
-        public virtual Order Order { get; set; }
+        public Product Product { get; set; }
+        public Order Order { get; set; }
     }
 }

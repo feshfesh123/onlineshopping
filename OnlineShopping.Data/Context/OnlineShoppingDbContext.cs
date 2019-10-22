@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineShopping.Data.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace OnlineShopping.Data
+namespace OnlineShopping.Data.Context
 {
-    class OnlineShoppingDbContext : DbContext
-    {
+    public class OnlineShoppingDbContext : DbContext
+    { 
         public OnlineShoppingDbContext(DbContextOptions options) : base(options)
         {
 

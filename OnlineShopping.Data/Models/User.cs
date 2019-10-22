@@ -12,7 +12,6 @@ namespace OnlineShopping.Data.Models
         public string Password { get; set; }
         public string Name { get; set; }
         public int RoleId { get; set; }
-        public virtual List<Order> Orders { get; set; }
         public virtual Role Role { get; set; }
     }
 }

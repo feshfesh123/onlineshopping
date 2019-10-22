@@ -6,6 +6,6 @@ namespace OnlineShopping.Data.Models
     {
         public int Id { get; set; }
         public string Type { get; set; }
-        public virtual List<User>  Users { get; set; }
+        public IList<User> users {get; set;}
     }
 }
