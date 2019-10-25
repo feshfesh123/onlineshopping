@@ -27,7 +27,7 @@ namespace OnlineShopping.Data.Repository
         }
         public async Task<bool> CreateAsync(User user)
         {
-            var role = _dbContext.Roles.Where(r => r.Type == "Admin").FirstOrDefault();
+            var role = _dbContext.Roles.Where(r => r.Type == "User").FirstOrDefault();
             user.Role = role;
 
             var res = _dbContext.Users.Where(x => x.Username == user.Username).FirstOrDefault();

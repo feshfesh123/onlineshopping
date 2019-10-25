@@ -13,10 +13,12 @@ namespace OnlineShopping.Controllers
     public class HomeController : Controller
     {
         private ICategoryRepository _categoryRepository;
+        private IProductRepository _productRepository;
 
-        public HomeController(ICategoryRepository categoryRepository)
+        public HomeController(ICategoryRepository categoryRepository, IProductRepository productRepository)
         {
             _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
         
         }
 
@@ -36,7 +38,17 @@ namespace OnlineShopping.Controllers
                 categoriesList = await _categoryRepository.GetAll(),
                 productsList = (await _categoryRepository.FindByIdAsync(id)).Products
             };
-            return View("Index",model);
+            return View("Index", model);
+        }
+        public async Task<IActionResult> ItemDetail(int id)
+        {
+            var model = new ProductDetailViewModel
+            {
+                categoriesList = await _categoryRepository.GetAll(),
+                product = await _productRepository.FindByIdAsync(id)
+            };
+
+            return View(model);
         }
         public IActionResult Privacy()
         {

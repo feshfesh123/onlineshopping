@@ -42,7 +42,7 @@ namespace OnlineShopping.Controllers
         {
             var user = await _userRepository.CanSignInAsync(form.login);
             if (user != null)
-            {
+            {   
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Name),
