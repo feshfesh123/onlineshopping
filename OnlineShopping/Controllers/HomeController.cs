@@ -5,25 +5,39 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using OnlineShopping.Data.Repository;
 using OnlineShopping.Models;
 
 namespace OnlineShopping.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private ICategoryRepository _categoryRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ICategoryRepository categoryRepository)
         {
-            _logger = logger;
+            _categoryRepository = categoryRepository;
         
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model = new HomeViewModel
+            {
+                categoriesList = await _categoryRepository.GetAll(),
+                productsList = (await _categoryRepository.FindByIdAsync(1)).Products
+            };
+            return View(model);
         }
-
+        public async Task<IActionResult> ItemList(int id)
+        {
+            var model = new HomeViewModel
+            {
+                categoriesList = await _categoryRepository.GetAll(),
+                productsList = (await _categoryRepository.FindByIdAsync(id)).Products
+            };
+            return View("Index",model);
+        }
         public IActionResult Privacy()
         {
             return View();

@@ -7,7 +7,7 @@
                 <div class="login-form">
                     <!--login form-->
                     <h2>Login to your account</h2>
-                     <form asp-controller="users" asp-action="login" method="post">
+                     <form asp-controller="account" asp-action="login" method="post">
                         <input type="text" placeholder="Username" asp-for="login.Username"/>
                         <input type="password" placeholder="Password" asp-for="login.Password" />
                         <span>
@@ -22,10 +22,11 @@
                 <h2 class="or">OR</h2>
             </div>
             <div class="col-sm-4">
+
                 <div class="signup-form">
                     <!--sign up form-->
                     <h2>New User Signup!</h2>
-                    <form asp-controller="users" asp-action="register" method="post">
+                    <form asp-controller="account" asp-action="register" method="post">
                         <input type="text" placeholder="Your Name" asp-for="register.Name"/>
                         <input type="text" placeholder="Username" asp-for="register.Username"/>
                         <input type="password" placeholder="Password" asp-for="register.Password"/>

@@ -11,6 +11,7 @@ using OnlineShopping.Data.Models;
 
 namespace OnlineShopping.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RolesController : Controller
     {
         private readonly OnlineShoppingDbContext _context;
@@ -20,7 +21,6 @@ namespace OnlineShopping.Controllers
             _context = context;
         }
 
-        [HttpGet]
         [Authorize]
         // GET: Roles
         public async Task<IActionResult> Index()

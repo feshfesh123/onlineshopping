@@ -9,8 +9,10 @@ namespace OnlineShopping.Data.Repository
     public interface IUserRepository
     {
         Task<bool> CreateAsync(User user);
-        Task<bool> DeleteAsync(string id);
-        Task<User> FindByIdAsync(string userId);
+        Task<bool> UpdateAsync(User user);
+        Task<bool> DeleteAsync(int id);
+        Task<User> FindByIdAsync(int userId);
         Task<User> CanSignInAsync(User user);
+        Task<IEnumerable<User>> GetAll();
     }
 }

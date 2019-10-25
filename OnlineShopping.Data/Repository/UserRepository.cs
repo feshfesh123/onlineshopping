@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using OnlineShopping.Data.Context;
 using OnlineShopping.Data.Models;
 
@@ -41,7 +42,7 @@ namespace OnlineShopping.Data.Repository
             return false;
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var user = await _dbContext.Users.FindAsync(id);
             if (user != null)
@@ -53,15 +54,28 @@ namespace OnlineShopping.Data.Repository
             return false;
         }
 
-        public async Task<User> FindByIdAsync(string userId)
+        public async Task<User> FindByIdAsync(int userId)
         {
-            return await _dbContext.Users.FindAsync(userId);
+            return await _dbContext.Users.Include(x => x.Role).FirstOrDefaultAsync(x => x.Id == userId);
         }
         public async Task<User> CanSignInAsync(User user)
         {
-            var res = _dbContext.Users.Where(x => x.Username == user.Username).FirstOrDefault();
+            var res = _dbContext.Users.Include(x => x.Role).Where(x => x.Username == user.Username).FirstOrDefault();
             if ( res!= null && MD5Hash(user.Password) == res.Password) return res;
             return null;
+        }
+
+        public async Task<IEnumerable<User>> GetAll()
+        {
+            return await _dbContext.Users.Include(x => x.Role).ToListAsync();
+        }
+
+        public async Task<bool> UpdateAsync(User user)
+        {
+            user.Password = MD5Hash(user.Password);
+            _dbContext.Update(user);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
     }
 }

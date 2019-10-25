@@ -10,6 +10,7 @@ namespace OnlineShopping.Data.Repository
     {
         Task<bool> CreateAsync(Role role);
         Task<bool> DeleteAsync(string id);
-        Task<Role> FindByIdAsync(string roleId);
+        Task<Role> FindByIdAsync(int roleId);
+        Task<IEnumerable<Role>> GetAll();
     }
 }

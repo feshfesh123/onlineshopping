@@ -33,9 +33,14 @@ namespace OnlineShopping.Data.Repository
             return false;
         }
 
-        public async Task<Role> FindByIdAsync(string roleId)
+        public async Task<Role> FindByIdAsync(int roleId)
         {
             return await _dbContext.Roles.FindAsync(roleId);
+        }
+
+        public async Task<IEnumerable<Role>> GetAll()
+        {
+            return _dbContext.Roles;
         }
     }
 }
