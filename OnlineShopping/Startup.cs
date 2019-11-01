@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OnlineShopping.Data.Context;
+using OnlineShopping.Data.Models;
 using OnlineShopping.Data.Repository;
 
 namespace OnlineShopping
@@ -31,13 +33,17 @@ namespace OnlineShopping
             services.AddControllersWithViews();
             services.AddDbContext<OnlineShoppingDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<User, Role>()
+                    .AddEntityFrameworkStores<OnlineShoppingDbContext>();
+            services.Configure<IdentityOptions>(options =>
+                options.Password.RequireNonAlphanumeric = false
+                );
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
-                options.LoginPath = new PathString("/users/register");
-                options.AccessDeniedPath = new PathString("/users/register");
+                options.LoginPath = new PathString("/account/register");
+                options.AccessDeniedPath = new PathString("/account/register");
             });
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
         }

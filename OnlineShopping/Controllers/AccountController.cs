@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineShopping.Data.Models;
 using OnlineShopping.Data.Repository;
 using OnlineShopping.Models;
 
@@ -14,12 +16,13 @@ namespace OnlineShopping.Controllers
 {
     public class AccountController : Controller
     {
-        private IUserRepository _userRepository;
-        private IRoleRepository _roleRepository;
-        public AccountController(IUserRepository userRepository, IRoleRepository roleRepository)
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            _userRepository = userRepository;
-            _roleRepository = roleRepository;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
         
         public IActionResult Register()
@@ -29,37 +32,64 @@ namespace OnlineShopping.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(LoginRegisterViewModel form)
         {
-            
-            if (await _userRepository.CreateAsync(form.register)) return RedirectToAction("Index", "Home");
-            else throw new Exception("This username have already used !");
+            if (ModelState.IsValid)
+            {
+                var user = new User { UserName = form.registerUsername, Name = form.registerName };
+                var result = await _userManager.CreateAsync(user, form.registerPassword);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+            }
+            return View(form);
         }
         public IActionResult Login()
         {
-            return View("Users/Register.cshtml", new LoginRegisterViewModel());
+            return View("Register", new LoginRegisterViewModel());
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginRegisterViewModel form)
         {
-            var user = await _userRepository.CanSignInAsync(form.login);
-            if (user != null)
-            {   
-                var claims = new List<Claim>
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(form.loginUsername, form.loginPassword, false, false);
+                if (result.Succeeded)
                 {
-                    new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(ClaimTypes.Role, user.Role.Type)
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                await HttpContext.SignInAsync(principal);
-                return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
+                }
+                ModelState.AddModelError(string.Empty, "Invalid Login");
+                
             }
-            else
-            throw new Exception("Wrong username/password");
+            return View("Register", form);
+            //var user = await _userRepository.CanSignInAsync(form.login);
+            //if (user != null)
+            //{   
+            //    var claims = new List<Claim>
+            //    {
+            //        new Claim(ClaimTypes.Name, user.Name),
+            //        new Claim(ClaimTypes.Role, user.Role.Type)
+            //    };
+            //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            //    var principal = new ClaimsPrincipal(identity);
+
+            //    await HttpContext.SignInAsync(principal);
+            //    return RedirectToAction("Index", "Home");
+            //}
+            //else
+            //throw new Exception("Wrong username/password");
         }
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }

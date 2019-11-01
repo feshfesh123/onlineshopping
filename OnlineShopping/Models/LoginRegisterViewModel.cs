@@ -8,7 +8,10 @@ namespace OnlineShopping.Models
 {
     public class LoginRegisterViewModel
     {
-        public User login { get; set; }
-        public User register { get; set; }
+        public string loginUsername { get; set; }
+        public string loginPassword { get; set; }
+        public string registerUsername { get; set; }
+        public string registerPassword { get; set; }
+        public string registerName { get; set; }
     }
 }
