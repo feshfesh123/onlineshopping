@@ -41,7 +41,8 @@ namespace OnlineShopping.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, "User");
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    if (!string.IsNullOrEmpty(form.ReturnUrl)) return Redirect(form.ReturnUrl);
+                    else return RedirectToAction("Index", "Home");
                 }
 
                 foreach (var error in result.Errors)
@@ -52,9 +53,9 @@ namespace OnlineShopping.Controllers
             }
             return View(form);
         }
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
-            return View("Register", new LoginRegisterViewModel());
+            return View("Register", new LoginRegisterViewModel {ReturnUrl = returnUrl});
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginRegisterViewModel form)
@@ -64,28 +65,13 @@ namespace OnlineShopping.Controllers
                 var result = await _signInManager.PasswordSignInAsync(form.loginUsername, form.loginPassword, false, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    if (!string.IsNullOrEmpty(form.ReturnUrl)) return Redirect(form.ReturnUrl);
+                    else return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError(string.Empty, "Invalid Login");
+                ModelState.AddModelError(string.Empty, "Invalid username or password ");
                 
             }
             return View("Register", form);
-            //var user = await _userRepository.CanSignInAsync(form.login);
-            //if (user != null)
-            //{   
-            //    var claims = new List<Claim>
-            //    {
-            //        new Claim(ClaimTypes.Name, user.Name),
-            //        new Claim(ClaimTypes.Role, user.Role.Type)
-            //    };
-            //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            //    var principal = new ClaimsPrincipal(identity);
-
-            //    await HttpContext.SignInAsync(principal);
-            //    return RedirectToAction("Index", "Home");
-            //}
-            //else
-            //throw new Exception("Wrong username/password");
         }
         public async Task<IActionResult> Logout()
         {

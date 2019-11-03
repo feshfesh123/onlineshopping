@@ -1,0 +1,37 @@
+﻿@model Order
+@using System.Globalization
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<div class="container">
+    <h3>ID : @Model.Id</h3>
+    <h3>Tên khách hàng: @Model.User.UserName</h3>
+    <h3>Điện thoại : @Model.Phone</h3>
+    <h3>Địa chỉ : @Model.Address</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Sản phẩm</td>
+                <td>Đơn giá</td>
+                <td>Số lượng</td>
+                <td>Tổng tiền</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderProducts)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Price</td>
+                    <td>@item.Quanity</td>
+                    <td>@item.Total.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h3>Tổng đơn hàng : @Model.TotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</h3>
+    <div>
+        <a asp-action="Index" asp-controller="Admin">Back to List</a>
+    </div>
+</div>

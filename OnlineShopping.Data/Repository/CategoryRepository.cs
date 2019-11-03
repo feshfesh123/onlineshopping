@@ -9,7 +9,7 @@ using OnlineShopping.Data.Models;
 
 namespace OnlineShopping.Data.Repository
 {
-    public class CategoryRepository : ICategoryRepository
+    internal class CategoryRepository : ICategoryRepository
     {
         private readonly OnlineShoppingDbContext _dbContext;
         public CategoryRepository(OnlineShoppingDbContext dbContext)

@@ -1,12 +1,48 @@
-﻿
+﻿@model IEnumerable<Order>
+@using System.Globalization
 @{
     ViewData["Title"] = "Index";
 }
-<ul class="nav navbar-nav">
-    <li><a asp-controller="users" asp-action="index"><i class="fa fa-user"></i> User</a></li>
-    <li><a asp-controller="roles" asp-action="index"><i class="fa fa-wrench"></i> Role</a></li>
-    <li><a asp-controller="products" asp-action="index"><i class="fa fa-shopping-cart"></i> Product</a></li>
-    <li><a asp-controller="categories" asp-action="index"><i class="fa fa-wrench"></i> Category</a></li>
-</ul>
+<div class="container"> 
+    <div class="row">
+        <ul class="nav navbar-nav">
+            <li><a asp-controller="users" asp-action="index"><i class="fa fa-user"></i> User</a></li>
+            <li><a asp-controller="roles" asp-action="index"><i class="fa fa-wrench"></i> Role</a></li>
+            <li><a asp-controller="products" asp-action="index"><i class="fa fa-shopping-cart"></i> Product</a></li>
+            <li><a asp-controller="categories" asp-action="index"><i class="fa fa-wrench"></i> Category</a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>ID</td>
+                    <td>User</td>
+                    <td>Phone</td>
+                    <td>Address</td>
+                    <td>Total</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.User.UserName</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Address</td>
+                        <td>@item.TotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</td>
+                        <td>
+                            <a asp-action="Invoice" asp-controller="Cart" asp-route-id="@item.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 
 

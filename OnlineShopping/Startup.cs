@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using OnlineShopping.Data.Context;
 using OnlineShopping.Data.Models;
 using OnlineShopping.Data.Repository;
+using OnlineShopping.Data.DependencyInjection;
 
 namespace OnlineShopping
 {
@@ -31,21 +32,13 @@ namespace OnlineShopping
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<OnlineShoppingDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<User, Role>()
-                    .AddEntityFrameworkStores<OnlineShoppingDbContext>();
-            services.Configure<IdentityOptions>(options =>
-                options.Password.RequireNonAlphanumeric = false
-                );
-
+            services.AddOnlineShoppingData(Configuration);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
                 options.LoginPath = new PathString("/account/register");
                 options.AccessDeniedPath = new PathString("/account/register");
             });
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +51,7 @@ namespace OnlineShopping
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -68,7 +62,7 @@ namespace OnlineShopping
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

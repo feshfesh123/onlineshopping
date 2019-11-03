@@ -13,5 +13,6 @@ namespace OnlineShopping.Models
         public string registerUsername { get; set; }
         public string registerPassword { get; set; }
         public string registerName { get; set; }
+        public string ReturnUrl { get; set; }
     }
 }

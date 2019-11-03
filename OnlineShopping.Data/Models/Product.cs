@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace OnlineShopping.Data.Models
 {
@@ -12,6 +14,9 @@ namespace OnlineShopping.Data.Models
         public string Unit { get; set; }
         public string Image { get; set; }
         public int CategoryId { get; set; }
+        [JsonIgnore]
+        [IgnoreDataMember]
         public virtual Category Category { get; set; }
+        public virtual IList<OrderProduct> OrderProducts { get; set; }
     }
 }

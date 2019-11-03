@@ -19,7 +19,7 @@
 
             <div class="shipping text-center">
                 <!--shipping-->
-                <img src="images/home/shipping.jpg" alt="" />
+                <img src="~/images/home/shipping.jpg" alt="" />
             </div><!--/shipping-->
 
         </div>
@@ -30,7 +30,7 @@
             <!--product-details-->
             <div class="col-sm-5">
                 <div class="view-product">
-                    <img src="@Model.product.Image" alt="" />
+                    <img src="@Model.product.Image" height="250" width="250" alt="" />
                     <h3>ZOOM</h3>
                 </div>
                 <div id="similar-product" class="carousel slide" data-ride="carousel">
@@ -45,18 +45,26 @@
             <div class="col-sm-7">
                 <div class="product-information">
                     <!--/product-information-->
-                    <img src="images/product-details/new.jpg" class="newarrival" alt="" />
+                    <img src="~/images/product-details/new.jpg" class="newarrival" alt="" />
                     <h2>@Model.product.Name</h2>
                     <p>ID: @Model.product.Id</p>
-                    <img src="images/product-details/rating.png" alt="" />
+                    <img src="~/images/product-details/rating.png" alt="" />
                     <span>
                         <span>@Model.product.Price.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"))</span>
                         <label>Quantity:</label>
-                        <input type="text" value="3" />
-                        <button type="button" class="btn btn-fefault cart">
-                            <i class="fa fa-shopping-cart"></i>
-                            Add to cart
-                        </button>
+                        <form asp-action="AddToCart" asp-controller="Cart"
+                              data-ajax="true"
+                              data-ajax-success="alert('Đã thêm sản phẩm vào giỏ hàng')"
+                              data-ajax-url="/Cart/AddToCart">
+                            <input name="id" type="text" value="@Model.product.Id" hidden/>
+                            <input name="quantity" type="text" value="1" />
+                            <button type="submit" class="btn btn-fefault cart">
+                                <i class="fa fa-shopping-cart"></i>
+                                Add to cart
+                            </button>
+                        </form>
+                        
+                        
                     </span>
                     <p><b>Availability:</b> In Stock</p>
                     <p><b>Condition:</b> New</p>
@@ -67,3 +75,8 @@
 
     </div>
 </div>
+
+@section scripts{ 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
+}

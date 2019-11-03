@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopping.Data.Context;
 
 namespace OnlineShopping.Data.Migrations
 {
     [DbContext(typeof(OnlineShoppingDbContext))]
-    partial class OnlineShoppingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191103040052_edit orderproduct")]
+    partial class editorderproduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

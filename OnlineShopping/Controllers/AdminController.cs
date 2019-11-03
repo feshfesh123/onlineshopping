@@ -4,15 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlineShopping.Data.Repository;
 
 namespace OnlineShopping.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        [Authorize(Roles = "Admin")]
-        public IActionResult Index()
+        private readonly ICartRepository _cartRepository;
+
+        public AdminController(ICartRepository cartRepository)
         {
-            return View();
+            _cartRepository = cartRepository;
+        }
+        public async Task<IActionResult> Index()
+        {
+            return View(await _cartRepository.GetAll());
         }
     }
 }

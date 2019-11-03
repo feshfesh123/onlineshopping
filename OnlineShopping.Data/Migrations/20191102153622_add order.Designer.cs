@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopping.Data.Context;
 
 namespace OnlineShopping.Data.Migrations
 {
     [DbContext(typeof(OnlineShoppingDbContext))]
-    partial class OnlineShoppingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191102153622_add order")]
+    partial class addorder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -390,7 +392,7 @@ namespace OnlineShopping.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("OnlineShopping.Data.Models.Product", "Product")
-                        .WithMany("OrderProducts")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
